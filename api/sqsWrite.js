@@ -1,18 +1,35 @@
 'use strict';
 
-module.exports.sqsWrite = async event => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+const AWS = require('aws-sdk');
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
-};
+AWS.config.setPromisesDependency(require('bluebird'));
+
+const sqsQueue = new AWS.SQS();
+const sqsUrl = process.env['SQS_URL'];
+
+
+module.exports.push = (event, context, callback) => {
+  const params = {
+    MessageBody: event.body,
+    QueueUrl: sqsUrl,
+  };
+  console.log(params);
+
+  sqsQueue.sendMessage(params, (err, data) => {
+    if (err) {
+      console.error(err);
+      callback(new Error('Couldn\'t send the message to SQS.'));
+      return;
+    } else {
+      console.log('SUCCESS' + data);
+
+      callback(null, {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'Sucessfully sent the message to SQS.'
+        })
+      });
+      return;
+    }
+  });
+}

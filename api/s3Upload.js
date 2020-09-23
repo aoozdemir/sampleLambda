@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports.s3Upload = async event => {
+module.exports.push = async event => {
   return {
     statusCode: 200,
     body: JSON.stringify(
