@@ -21,12 +21,12 @@ module.exports.push = (event, context, callback) => {
       callback(new Error('Couldn\'t send the message to SQS.'));
       return;
     } else {
-      console.log('SUCCESS' + data);
+      console.log('Successfully sent the message to SQS.');
 
       callback(null, {
         statusCode: 200,
         body: JSON.stringify({
-          message: 'Sucessfully sent the message to SQS.'
+          message: 'Successfully sent the message to SQS.'
         })
       });
       return;
