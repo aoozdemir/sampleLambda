@@ -2,8 +2,6 @@
 
 const AWS = require('aws-sdk');
 
-AWS.config.setPromisesDependency(require('bluebird'));
-
 const sqsQueue = new AWS.SQS();
 const sqsUrl = process.env['SQS_URL'];
 

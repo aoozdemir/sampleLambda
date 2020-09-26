@@ -4,7 +4,7 @@ frameworkVersion: "2"
 custom:
   stage: dev
   region: eu-west-1
-  s3Bucket: thundra-oguzhan-sqs
+  s3Bucket: sample-lambda-sqs
 
 provider:
   name: aws

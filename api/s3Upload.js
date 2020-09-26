@@ -1,8 +1,6 @@
 'use strict';
 
 const AWS = require('aws-sdk');
-AWS.config.setPromisesDependency(require('bluebird'));
-AWS.config.update({ region: 'eu-west-1' });
 
 const s3 = new AWS.S3();
 const s3Bucket = process.env['S3_BUCKET'];
@@ -36,7 +34,7 @@ module.exports.push = (event, _, callback) => {
       callback(null, {
         statusCode: 200,
         body: JSON.stringify({
-          message: 'Successfully sent the message to SQS.'
+          message: 'Successfully sent the document to S3.'
         })
       });
       return;
