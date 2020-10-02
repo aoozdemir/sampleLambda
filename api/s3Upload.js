@@ -5,7 +5,9 @@ const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
 const s3Bucket = process.env['S3_BUCKET'];
 
-module.exports.push = (event, _, callback) => {
+const thundra = require("@thundra/core")();
+
+module.exports.push = thundra((event, _, callback) => {
   const object = {
     MessageId: event.Records[0].messageId,
     Attributes: event.Records[0].attributes,
@@ -40,4 +42,4 @@ module.exports.push = (event, _, callback) => {
       return;
     }
   });
-}
+});

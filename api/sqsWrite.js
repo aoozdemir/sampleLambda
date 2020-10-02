@@ -5,15 +5,16 @@ const AWS = require('aws-sdk');
 const sqsQueue = new AWS.SQS();
 const sqsUrl = process.env['SQS_URL'];
 
+const thundra = require("@thundra/core")();
 
-module.exports.push = (event, context, callback) => {
+module.exports.push = thundra((event, _, callback) => {
   const params = {
     MessageBody: event.body,
     QueueUrl: sqsUrl,
   };
   console.log(params);
 
-  sqsQueue.sendMessage(params, (err, data) => {
+  sqsQueue.sendMessage(params, (err, _) => {
     if (err) {
       console.error(err);
       callback(new Error('Couldn\'t send the message to SQS.'));
@@ -30,4 +31,4 @@ module.exports.push = (event, context, callback) => {
       return;
     }
   });
-}
+});

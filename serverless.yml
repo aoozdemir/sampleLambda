@@ -5,6 +5,7 @@ custom:
   stage: dev
   region: eu-west-1
   s3Bucket: sample-lambda-sqs
+  thundra_apiKey: ${ssm:/aws/reference/secretsmanager/defaultThundraApiKey~true}
 
 provider:
   name: aws
@@ -37,6 +38,7 @@ functions:
     environment:
       SQS_URL:
         Ref: lambdaPayload
+      thundra_apiKey: ${self:custom.thundra_apiKey.THUNDRA_APIKEY}
     events:
       - http:
           path: /sqs
@@ -48,6 +50,7 @@ functions:
     environment:
       S3_BUCKET:
         Ref: lambdaBucket
+      thundra_apiKey: ${self:custom.thundra_apiKey.THUNDRA_APIKEY}
     events:
       - sqs:
           arn:
