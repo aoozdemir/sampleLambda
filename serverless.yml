@@ -4,8 +4,9 @@ frameworkVersion: "2"
 custom:
   stage: dev
   region: eu-west-1
-  s3Bucket: sample-lambda-sqs
+  s3Bucket: thundra-oz-lambda-sqs
   thundra_apiKey: ${ssm:/aws/reference/secretsmanager/defaultThundraApiKey~true}
+  thundra_debug_token: ${ssm:/aws/reference/secretsmanager/defaultThundraDebugToken~true}
 
 provider:
   name: aws
@@ -34,11 +35,17 @@ functions:
   sqsWrite:
     handler: api/sqsWrite.push
     memorySize: 128
+    timeout: 10
     description: Send the payload to the SQS Queue
+    maximumRetryAttempts: 1
+    maximumEventAge: 60
     environment:
       SQS_URL:
         Ref: lambdaPayload
       thundra_apiKey: ${self:custom.thundra_apiKey.THUNDRA_APIKEY}
+      thundra_agent_lambda_debug_enable: true
+      # thundra_agent_lambda_debugger_auth_token: ${self:custom.thundra_debug_token.THUNDRA_DEBUG_TOKEN}
+      # thundra_agent_invocation_sample_onerror: true
     events:
       - http:
           path: /sqs
@@ -46,11 +53,17 @@ functions:
   s3Upload:
     handler: api/s3Upload.push
     memorySize: 128
+    timeout: 300
     description: Upload the message to S3
+    maximumRetryAttempts: 1
+    maximumEventAge: 60
     environment:
       S3_BUCKET:
         Ref: lambdaBucket
       thundra_apiKey: ${self:custom.thundra_apiKey.THUNDRA_APIKEY}
+      thundra_agent_lambda_debug_enable: true
+      thundra_agent_lambda_debugger_auth_token: ${self:custom.thundra_debug_token.THUNDRA_DEBUG_TOKEN}
+      # thundra_agent_invocation_sample_onerror: true
     events:
       - sqs:
           arn:
